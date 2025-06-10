@@ -7,28 +7,30 @@ from datetime import datetime
 from pathlib import Path
 
 def create_archive(log_dir):
-    # Verify the log directory exists
     log_path = Path(log_dir)
     if not log_path.exists() or not log_path.is_dir():
-        print(f"Error: The path {log_dir} does not exist or is not a directory.")
+        print(f"❌ Error: The path {log_dir} does not exist or is not a directory.")
         return
 
-    # Create output directory
     archive_dir = Path.home() / "log_archives"
     archive_dir.mkdir(parents=True, exist_ok=True)
 
-    # Archive filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     archive_filename = f"logs_archive_{timestamp}.tar.gz"
     archive_filepath = archive_dir / archive_filename
 
-    # Create tar.gz archive
     with tarfile.open(archive_filepath, "w:gz") as tar:
         for item in log_path.iterdir():
-            if item.is_file():
-                tar.add(item, arcname=item.name)
+            if item.is_file() and item.suffix == ".log":
+                try:
+                    tar.add(item, arcname=item.name)
+                    print(f"✅ Added: {item.name}")
+                except PermissionError:
+                    print(f"⚠️ Skipped (Permission denied): {item}")
+                except Exception as e:
+                    print(f"⚠️ Skipped {item} due to error: {e}")
 
-    print(f"✅ Logs archived to: {archive_filepath}")
+    print(f"\n🎉 Archive created: {archive_filepath}")
 
     # Log the operation
     log_file = archive_dir / "archive_log.txt"
@@ -36,7 +38,7 @@ def create_archive(log_dir):
         logf.write(f"{timestamp} - Archived: {archive_filename}\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Archive and compress logs from a given directory.")
+    parser = argparse.ArgumentParser(description="Compress and archive .log files from a directory.")
     parser.add_argument("log_directory", help="Path to the log directory (e.g. /var/log)")
     args = parser.parse_args()
 
