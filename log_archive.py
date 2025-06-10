@@ -1,3 +1,10 @@
+"""
+log_archive.py - Log Archiving CLI Tool
+
+Copyright (c) 2025 Ashish Singh
+License: MIT (see LICENSE file for full text)
+"""
+
 #!/usr/bin/env python3
 
 import argparse
