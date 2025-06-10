@@ -1,10 +1,6 @@
 # Log_Archive_Tool
 https://roadmap.sh/projects/log-archive-tool
 
-✅ Updated README.md
-markdown
-Copy
-Edit
 # 📦 Log Archive Tool
 
 A simple command-line tool to compress and archive log files from a specified directory.  
